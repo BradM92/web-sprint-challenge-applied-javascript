@@ -1,3 +1,6 @@
+import axios from "axios";
+import { headerAppender } from "./header";
+
 const Card = (article) => {
   // TASK 5
   // ---------------------
@@ -17,7 +20,51 @@ const Card = (article) => {
   //   </div>
   // </div>
   //
+  for(let i= 0; i< article.length; i++){
+ // create elements for html
+  const cardEl= document.createElement('div');
+  const headlineEl = document.createElement('div');
+  const authorEl = document.createElement('div');
+  const imgDiv = document.createElement('div');
+  const imgEl = document.createElement('img');
+  const span = document.createElement('span');
+
+  //assign CSS classes
+  cardEl.classList.add('card');
+  headlineEl.classList.add('headline');
+  authorEl.classList.add('author');
+  imgDiv.classList.add('img-container');
+
+  // create hierarchy
+  cardEl.appendChild(headlineEl);
+  cardEl.appendChild(authorEl);
+  authorEl.appendChild(imgDiv);
+  imgDiv.appendChild(imgEl);
+  authorEl.appendChild(span);
+
+  // assign data to elements
+  // console.log(article);
+  // article.forEach(element => {
+  //   headlineEl.textContent = element.headline;
+  // imgEl.src = element.authorPhoto;
+  // span.textContent = element.authorName;
+  // });
+  
+  headlineEl.textContent = article[i].headline;
+  imgEl.src = article[i].authorPhoto;
+  span.textContent = article[i].authorName;
+  
+
+  console.log(article[1].headline);
+  cardEl.addEventListener('click', onclick => {
+    console.log(headlineEl.textContent);
+  })
+
+
+return cardEl;
 }
+}
+
 
 const cardAppender = (selector) => {
   // TASK 6
@@ -28,6 +75,32 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
+  axios.get(`http://localhost:5000/api/articles`)
+  .then( resp =>{
+    console.log(resp);
+    console.log(resp.data.articles.javascript[1].headline);
+    const newJavaScriptobj = resp.data.articles.javascript;
+    console.log(newJavaScriptobj);
+    const NewCardJavaScript = Card(newJavaScriptobj);
+    const NewBootStrapObj = resp.data.articles.bootstrap;
+    const newBootstrapCard = Card(NewBootStrapObj);
+    const NewTechnologyObj = resp.data.articles.technology;
+    const newTechnologyCard = Card(NewTechnologyObj);
+    const NewJQueryObj = resp.data.articles.jquery;
+    const newjQueryCard = Card(NewJQueryObj);
+    const NewNodeObj = resp.data.articles.node;
+    const newNodeCard = Card(NewNodeObj);
+
+    
+    const CardAppend = document.querySelector(`${selector}`);
+  //apend to the given selector
+  CardAppend.appendChild(NewCardJavaScript);
+  CardAppend.appendChild(newBootstrapCard);
+  CardAppend.appendChild(newTechnologyCard);
+  CardAppend.appendChild(newjQueryCard);
+  CardAppend.appendChild(newNodeCard);
+
+  })
 }
 
 export { Card, cardAppender }
